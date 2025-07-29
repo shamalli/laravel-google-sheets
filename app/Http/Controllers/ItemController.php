@@ -5,18 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Enums\Status;
 use Illuminate\Http\Request;
-use App\Services\GoogleSheetService;
-use Spatie\LaravelSettings\Settings;
-
-class GoogleSettings extends Settings
-{
-    public string $google_sheet_url;
-    
-    public static function group(): string
-    {
-        return 'google';
-    }
-}
+use App\Settings\GoogleSettings;
 
 class ItemController extends Controller
 {
