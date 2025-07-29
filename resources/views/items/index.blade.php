@@ -23,7 +23,7 @@
                     @csrf
                     <div class="form-group">
                         <label for="google_sheet_url">Google Sheet URL</label>
-                        <input type="url" class="border p-2 rounded" id="google_sheet_url" name="google_sheet_url" 
+                        <input type="url" class="border p-2 rounded w-1/2" id="google_sheet_url" name="google_sheet_url" 
                             value="{{ $google_sheet_url }}" required>
                     </div>
                     <button type="submit" class="mb-4 px-4 py-2 bg-blue-500 text-white font-bold rounded cursor-pointer">Save URL</button>
@@ -31,7 +31,7 @@
             </div>
         </div>
         
-        <div class="table-responsive">
+        <div>
             <div class="flex gap-2">
                 <div class="w-1/4 pb-2">ID</div>
                 <div class="w-1/4 pb-2">Name</div>
@@ -54,11 +54,11 @@
                 <div class="p-2 w-1/4">{{ $item->created_at }}</div>
                 <div class="p-2 w-1/4">{{ $item->updated_at }}</div>
                 <div class="p-2 w-1/4">
-                    <a href="{{ route('items.edit', $item->id) }}" class="btn btn-sm btn-primary">Edit</a>
+                    <a href="{{ route('items.edit', $item->id) }}" class="cursor-pointer">Edit</a>
                     <form action="{{ route('items.destroy', $item->id) }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        <button type="submit" class="cursor-pointer text-red-500">Delete</button>
                     </form>
                 </div>
             </div>

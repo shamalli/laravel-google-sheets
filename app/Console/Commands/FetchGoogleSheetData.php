@@ -3,8 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Services\GoogleSheetService;
 use Illuminate\Support\Facades\Log;
+use App\Services\GoogleSheetService;
+use App\Settings\GoogleSettings;
 
 class FetchGoogleSheetData extends Command
 {
@@ -14,7 +15,7 @@ class FetchGoogleSheetData extends Command
     
     public function handle(GoogleSheetService $sheetService)
     {
-        $url = setting('google_sheet_url');
+        $url = app(GoogleSettings::class)->google_sheet_url;
         
         if (!$url) {
             $this->error('Google Sheet URL is not set');
@@ -23,11 +24,11 @@ class FetchGoogleSheetData extends Command
         
         $sheetService->setSheetId($url);
         $count = $this->option('count');
+
+        $this->info("Fetching data from Google Sheet...");
         
         $data = $sheetService->fetchSheetData($count);
         $total = count($data);
-        
-        $this->info("Fetching data from Google Sheet...");
         
         $bar = $this->output->createProgressBar($total);
         $bar->start();

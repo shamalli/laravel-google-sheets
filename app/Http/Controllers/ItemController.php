@@ -11,7 +11,8 @@ class ItemController extends Controller
 {
     public function index()
     {
-        $items = Item::latest()->paginate(10);
+        $items = Item::latest()->orderBy('id', 'desc')->paginate(10);
+        //var_dump($items);
         $google_sheet_url = app(GoogleSettings::class)->google_sheet_url;
         return view('items.index', compact('items') + ['google_sheet_url' => $google_sheet_url]);
     }

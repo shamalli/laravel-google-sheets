@@ -20,13 +20,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/password', Password::class)->name('settings.password');
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 });
-
 require __DIR__.'/auth.php';
-
 
 use App\Http\Controllers\ItemController;
 use Illuminate\Support\Facades\Artisan;
-use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
 Route::middleware(['auth'])->group(function () {
@@ -37,14 +35,31 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/fetch/{count?}', function ($count = null) {
-    $command = ['php', 'artisan', 'google-sheet:fetch'];
+    $command = ['C:\Users\Shamalli\.config\herd-lite\bin\php.exe', 'artisan', 'google-sheet:fetch'];
     
     if ($count) {
         $command[] = '--count='.$count;
     }
     
-    $process = new Process($command, base_path());
-    $process->run();
+    //$process = new Process($command, base_path());
+    $process = Process::path(base_path())->run($command);
+    //$process = Process::path(base_path())->run('C:\Users\Shamalli\.config\herd-lite\bin\php.exe -v');
+    //$process = Process::run('dir /s');
+    //$process->run();
+
+    //var_dump($process->getOutput());
+    var_dump(implode(' ', $command));
+    var_dump(utf8_encode($process->output()));
+    //var_dump($process);
+    var_dump($process->errorOutput());
+    var_dump($process->successful());
+    var_dump($process->failed());
+    var_dump($process->exitCode());
+    var_dump(base_path());
+
+    var_dump(shell_exec('php artisan google-sheet:fetch'));
+    var_dump(exec('php artisan google-sheet:fetch'));
+    die();
     
     if (!$process->isSuccessful()) {
         throw new ProcessFailedException($process);
