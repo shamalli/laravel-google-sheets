@@ -24,8 +24,7 @@ require __DIR__.'/auth.php';
 
 use App\Http\Controllers\ItemController;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('items', ItemController::class);
@@ -35,17 +34,13 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/fetch/{count?}', function ($count = null) {
-    $command = ['php', 'artisan', 'google-sheet:fetch'];
+    $command = 'google-sheet:fetch';
     
+    $params = [];
     if ($count) {
-        $command[] = '--count='.$count;
+        $params['--count'] = $count;
     }
-    
-    $result = Process::path(base_path())->run($command);
-    
-    if (!$result->successful()) {
-        $result->throw();
-    }
-    
-    return '<pre>'.$result->output().'</pre>';
+
+    Artisan::call($command, $params);
+    return nl2br(Artisan::output());
 });
