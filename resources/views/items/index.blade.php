@@ -1,6 +1,12 @@
 <x-layouts.app :title="__('Dashboard')">
     <div class="container">
         <h1 class="text-2xl font-bold mb-4">Items Management</h1>
+
+        @if (session('message'))
+            <div class="p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+                <span class="font-medium">{{ session('message') }}</span>
+            </div>
+        @endif
         
         <div class="mb-4">
             <div class="mb-4">
@@ -46,11 +52,7 @@
                 <div class="p-2 w-1/4">{{ $item->id }}</div>
                 <div class="p-2 w-1/4">{{ $item->name }}</div>
                 <div class="p-2 w-1/4">{{ $item->description }}</div>
-                <div class="p-2 w-1/4">
-                    <span class="badge badge-{{ $item->status->value === 'Allowed' ? 'success' : 'danger' }}">
-                        {{ $item->status->value }}
-                    </span>
-                </div>
+                <div class="p-2 w-1/4">{{ $item->status->value }}</div>
                 <div class="p-2 w-1/4">{{ $item->created_at }}</div>
                 <div class="p-2 w-1/4">{{ $item->updated_at }}</div>
                 <div class="p-2 w-1/4">

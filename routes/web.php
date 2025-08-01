@@ -35,35 +35,17 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/fetch/{count?}', function ($count = null) {
-    $command = ['C:\Users\Shamalli\.config\herd-lite\bin\php.exe', 'artisan', 'google-sheet:fetch'];
+    $command = ['php', 'artisan', 'google-sheet:fetch'];
     
     if ($count) {
         $command[] = '--count='.$count;
     }
     
-    //$process = new Process($command, base_path());
-    $process = Process::path(base_path())->run($command);
-    //$process = Process::path(base_path())->run('C:\Users\Shamalli\.config\herd-lite\bin\php.exe -v');
-    //$process = Process::run('dir /s');
-    //$process->run();
-
-    //var_dump($process->getOutput());
-    var_dump(implode(' ', $command));
-    var_dump(utf8_encode($process->output()));
-    //var_dump($process);
-    var_dump($process->errorOutput());
-    var_dump($process->successful());
-    var_dump($process->failed());
-    var_dump($process->exitCode());
-    var_dump(base_path());
-
-    var_dump(shell_exec('php artisan google-sheet:fetch'));
-    var_dump(exec('php artisan google-sheet:fetch'));
-    die();
+    $result = Process::path(base_path())->run($command);
     
-    if (!$process->isSuccessful()) {
-        throw new ProcessFailedException($process);
+    if (!$result->successful()) {
+        $result->throw();
     }
     
-    return '<pre>'.$process->getOutput().'</pre>';
+    return '<pre>'.$result->output().'</pre>';
 });

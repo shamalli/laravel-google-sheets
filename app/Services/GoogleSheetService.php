@@ -6,6 +6,7 @@ use App\Models\Item;
 use Google\Client;
 use Google\Service\Sheets;
 use Google\Service\Sheets\ValueRange;
+use Google\Service\Sheets\ClearValuesRequest;
 use Illuminate\Support\Facades\Log;
 
 class GoogleSheetService
@@ -52,7 +53,7 @@ class GoogleSheetService
             $values[] = [
                 $item->id,
                 $item->name,
-                $item->description,
+                $item->description ?? '',
                 $item->status->value,
                 $item->created_at,
                 $item->updated_at,
@@ -69,6 +70,15 @@ class GoogleSheetService
                 $row[] = $comments[$id];
             }
         }
+
+        // Clear the sheet
+        $range = 'A1:Z'; // Start from top-left
+        $clearValuesRequest = new ClearValuesRequest();
+        $this->service->spreadsheets_values->clear(
+            $this->sheetId,
+            $range,
+            $clearValuesRequest
+        );
         
         // Update the sheet
         $range = 'A1'; // Start from top-left

@@ -12,7 +12,6 @@ class ItemController extends Controller
     public function index()
     {
         $items = Item::latest()->orderBy('id', 'desc')->paginate(10);
-        //var_dump($items);
         $google_sheet_url = app(GoogleSettings::class)->google_sheet_url;
         return view('items.index', compact('items') + ['google_sheet_url' => $google_sheet_url]);
     }
@@ -32,7 +31,7 @@ class ItemController extends Controller
         
         Item::create($validated);
         
-        return redirect()->route('items.index');
+        return redirect()->route('items.index')->with('message', 'Item created!');
     }
     
     public function edit(Item $item)
@@ -50,13 +49,13 @@ class ItemController extends Controller
         
         $item->update($validated);
         
-        return redirect()->route('items.index');
+        return redirect()->route('items.index')->with('message', 'Item updated!');
     }
     
     public function destroy(Item $item)
     {
         $item->delete();
-        return redirect()->route('items.index');
+        return redirect()->route('items.index')->with('message', 'Item deleted!');
     }
     
     public function generateRandom()
@@ -71,13 +70,13 @@ class ItemController extends Controller
             ]);
         }
         
-        return redirect()->route('items.index')->with('success', '1000 items generated!');
+        return redirect()->route('items.index')->with('message', '1000 items generated!');
     }
     
     public function clearAll()
     {
         Item::truncate();
-        return redirect()->route('items.index')->with('success', 'All items deleted!');
+        return redirect()->route('items.index')->with('message', 'All items deleted!');
     }
     
     public function setGoogleSheetUrl(GoogleSettings $settings, Request $request)
@@ -89,6 +88,6 @@ class ItemController extends Controller
         $settings->google_sheet_url = $request->google_sheet_url;
         $settings->save();
         
-        return redirect()->route('items.index')->with('success', 'Google Sheet URL saved!');
+        return redirect()->route('items.index')->with('message', 'Google Sheet URL saved!');
     }
 }
